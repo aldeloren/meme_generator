@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Memegenerator</title>
+<link rel='stylesheet' href='reset.css'>
+<link href='http://fonts.googleapis.com/css?family=Oswald:700' rel='stylesheet' type='text/css'>
+<style>
+html, body{
+	width:100%;
+	height:100%;
+	margin:0;
+	padding:0;
+	background:#ecf0f1;
+	font-family:'Helvetica', sans-serif;
+}
+#header{
+	position:absolute;
+	top:0;
+	width:100%;
+	height:50px;
+	background:#3498db;
+	z-index:999;
+}
+#content{
+	width:100%;
+	height:100%;
+	margin-top:80px;
+}
+#meme{
+	position:relative;
+	overflow:hidden;
+}
+#meme img{
+ 	z-index:-9999;
+}
+#meme-inner #top-text{
+	top:0;
+}
+#meme-inner #bottom-text{
+	bottom:0;
+}
+#meme .text{
+	position:absolute;
+	background: rgba(0,0,0, 0.5);
+	width:100%;
+	height:auto;
+	min-height:40px;
+	font-family: 'Oswald', sans-serif;
+	color:white;
+	text-shadow: 0px 0px 5px rgba(0, 0, 0, 1);
+	font-size:2.5em;
+	line-height:1.4em;
+	text-align:center;
+}
+#do-it{
+	margin:0 auto;
+	height:50px;
+	cursor:pointer;
+	background:#2980b9;
+	text-align: center;
+	color:#ecf0f1;
+	font-variant:small-caps;
+	line-height:50px;
+	font-weight: 700;
+	font-size:2em;
+}
+.spacer{
+	margin-bottom:40px;
+}
+#meme-library{
+	margin-left:50px;
+	margin-right:50px;
+}
+#meme-library .another-meme{
+	float:left;
+	overflow:hidden;
+	margin:15px;
+	cursor:pointer;
+}
+#meme-library .another-meme img{
+	max-width: 250px;
+	max-height: 250px;
+}
+
+</style>
+</head>
+<body>
+	<div id='header'>
+some meme
+	</div>
+	<div id='content'>
+	<div id='meme'>
+		<img id='meme-img' src='http://i.imgur.com/dvAOBrA.png'>
+		<div id='meme-inner'>
+				<div id='top-text' class='text' onClick="this.contentEditable='true'">Make your meme</div>
+				<div id='bottom-text' class='text' onClick="this.contentEditable='true'">Without quickmeme</div>
+		</div>
+	</div>
+	<div id='do-it'>submit</div>	
+<div class='spacer'></div>
+<div id='meme-library'>
+	<div class='another-meme'>
+		<img src='http://i.imgur.com/hChVqln.jpg'>
+	</div>
+	<div class='another-meme'>
+		<img src='http://i.imgur.com/sv7LHUK.png'>
+	</div>
+	<div class='another-meme'>
+		<img src='http://i.imgur.com/dPNrnPq.jpg'>
+	</div>
+	<div class='another-meme'>
+		<img src='http://i.imgur.com/kT11PCw.jpg'>
+	</div>
+
+
+	
+</div>
+
+
+<!--[if lt IE 9]>
+<script src='http://code.jquery.com/jquery-1.10.0.min.js'></script>
+<![endif]-->
+<!--[if gte IE 9]><!-->
+ <script src='jquery-2.0.2.min.js'></script>
+<!--<![endif]-->
+<script>
+$(document).ready(function() {
+	$( '#do-it' ).click(function (event) {
+	  event.preventDefault();
+		var topQueryString = 't=' + $('#top-text').text();
+		var bottomQueryString = '&b=' + $('#bottom-text').text();
+		var imgQueryString = '&i=' + $('#meme img').attr('src')
+		var newQueryString = decodeURIComponent('?' + topQueryString + bottomQueryString + imgQueryString);
+	  var addQueryToPathname = "http://aldev.co/dev/meme/index.html/"
+	  alert(addQueryToPathname + newQueryString)
+	  location.href = addQueryToPathname + newQueryString;
+	});
+function makeMeme(){
+	var urlParams;
+	    var match,
+	        pl     = /\+/g,
+	        search = /([^&=]+)=?([^&]*)/g,
+	        decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
+	        query  = window.location.search.substring(1);
+
+	    var urlParams = {};
+	    while (match = search.exec(query))
+	     urlParams[decode(match[1])] = decode(match[2]);
+	     var top = urlParams['t'];
+	     var bottom = urlParams['b'];
+	     var image = urlParams['i'];
+	     $('#top-text').text(top);
+	     $('#bottom-text').text(bottom);
+	     $('#meme img').attr('src',image)
+	     contSize();
+}makeMeme();
+	function contSize() {
+		img = '#meme-img'
+		imgWidth = $(img).width();
+		imgHeight = $(img).height();
+		var styles = {
+	    width: imgWidth,
+	    height: imgHeight,
+	    margin: '0 auto'
+	  };
+		$('#meme').css(styles)
+		$('#do-it').css('width',imgWidth);
+  }contSize();
+  $('.another-meme').click(function () {
+  	var newMeme = $(this).children('img')[0];
+  	var newMemeSrc = $(newMeme).attr('src');
+  	$('#meme img').attr('src', newMemeSrc);
+  	contSize();
+  })
+  var topLength = $('#top-text').text().length;
+  $('#top-text').keypress(function(event) {
+  	var topLength = $('#top-text').text().length;
+  	if (topLength > 40 && topLength < 80 ){
+  		$(this).css('font-size','2em');
+  	}if(topLength > 80){
+  		$(this).css('font-size','1.5em');
+  	}
+  })
+  var bottomLength = $('#bottom-text').text().length;
+  $('#bottom-text').keypress(function(event) {
+  	var bottomLength = $('#bottom-text').text().length;
+  	if (bottomLength > 40 && bottomLength < 80 ){
+  		$(this).css('font-size','2em');
+  	}if(bottomLength > 80){
+  		$(this).css('font-size','1.5em');
+  	}
+  })
+  function textSize(bottomLength, topLength){
+  	if (bottomLength > 40 && bottomLength < 80 ){
+  		$(this).css('font-size','2em');
+  	}if(bottomLength > 80){
+  		$(this).css('font-size','1.5em');
+  	}
+  
+  }textSize(bottomLength);
+  var topString = 'Make your meme';
+  var bottomString = 'Without quickmeme';
+  function addText(place,string){
+  	if($(place).text() !== string){
+  		$(place).css('background', 'transparent');
+  	}
+  }
+  function clearText(place,string){
+  	if($(place).text() == string){
+  		$(place).text('');
+  	}
+  }
+  //addText('#top-text', topString);
+  //addText('bottom-text', bottomString)
+
+  $('#top-text').focusin(function(){
+  	clearText(this, topString);
+  })
+  $('#bottom-text').focusin(function(){
+  	clearText(this, bottomString);
+  })
+
+  $('#top-text').focusout(function(){
+  	addText(this, topString);
+  })
+
+  $('#bottom-text').focusout(function(){
+  	addText(this, bottomString);
+  })
+});
+
+
+
+</script>
+</div>
+</body>
+</html>
